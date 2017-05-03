@@ -13,19 +13,25 @@ class ChipList extends Component {
         super(props);
 
         this._onDataChange = this._onDataChange.bind(this);
+        this.poll = this.poll.bind(this);
+        this.startPolling = this.startPolling.bind(this);
+        this.stopPolling = this.stopPolling.bind(this);
 
         this.state = {
+            polling: false,
             chips: []
         };
     }
 
     componentDidMount() {
         ChipStore.addChipsChangeListener(this._onDataChange);
-        this.getData();
+        // this.getData();
+        this.startPolling();
     }
 
     componentWillUnmount() {
         ChipStore.removeChipsChangeListener(this._onDataChange);
+        this.stopPolling();
     }
 
     _onDataChange() {
@@ -33,6 +39,38 @@ class ChipList extends Component {
         this.setState({
             chips: chips
         });
+    }
+
+    startPolling() {
+        let polling = this.state.polling;
+        if(polling) {
+            return;
+        }
+
+        this.setState({
+            polling: true
+        });
+
+        let that = this;
+        setTimeout(function() {
+            that.poll(); // do it once and then start it up ...
+            that._timer = window.setInterval(that.poll, 1000);
+        }, 100);
+    }
+
+    stopPolling() {
+        if (this._timer) {
+            clearInterval(this._timer);
+            this._timer = null;
+        }
+
+        this.setState({
+            polling: false
+        });
+    }
+
+    poll() {
+        this.getData();
     }
 
     getData() {

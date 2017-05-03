@@ -7,6 +7,9 @@ const path = require('path');
 const bodyParser = require('body-parser')
 const tstore = require('./storage.js');
 
+const includes = require('lodash/includes');
+const config = require('../apisecret.json');
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -18,21 +21,36 @@ app.use(express.static(path.resolve(__dirname, '..', 'build')));
 
 app.post('/api/badum', function(req, res) {
     if(!req.body) return res.sendStatus(400);
-    if(!req.body.chipId || !req.body.counter) return res.sendStatus(400);
+    if(!req.body.chipId || !req.body.counter || !req.body.chipName || !req.body.apisecret) return res.sendStatus(400);
+
+    let sendSecret = req.body.apisecret;
+    if(!includes(config.secret, sendSecret)) {
+        res.sendStatus(401);
+        return;
+    }
+
 
     let chipId = req.body.chipId;
+    let chipName = req.body.chipName;
     let counter = req.body.counter;
-    tstore.saveBadum(chipId, counter, req.ip);
+    tstore.saveBadum(chipId, chipName, counter, req.ip);
     res.send('success');
 });
 
 app.post('/api/fail', function(req, res) {
     if(!req.body) return res.sendStatus(400);
-    if(!req.body.chipId || !req.body.counter) return res.sendStatus(400);
+    if(!req.body.chipId || !req.body.counter || !req.body.chipName || !req.body.apisecret) return res.sendStatus(400);
+
+    let sendSecret = req.body.apisecret;
+    if(!includes(config.secret, sendSecret)) {
+        res.sendStatus(401);
+        return;
+    }
 
     let chipId = req.body.chipId;
+    let chipName = req.body.chipName;
     let counter = req.body.counter;
-    tstore.saveFail(chipId, counter, req.ip);
+    tstore.saveFail(chipId, chipName, counter, req.ip);
     res.send('success');
 });
 

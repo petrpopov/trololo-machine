@@ -15,7 +15,7 @@ class ChipCounterItem extends Component {
         let counter = this.getString();
 
         return (
-            <div className="clock-presenter col-sm-4">
+            <div className="clock-presenter col-sm-6">
                 {
                     counter.split("").map(function(char) {
                         return <div className="digit">{char}</div>
@@ -29,14 +29,14 @@ class ChipCounterItem extends Component {
     getString() {
         let counter = this.props.counter;
         if(!counter) {
-            return '0000';
+            return '000000';
         }
 
-        if(counter >= 9999) {
-            counter = 9999;
+        if(counter >= 999999) {
+            counter = 999999;
         }
 
-        return this.padDigits(counter, 4);
+        return this.padDigits(counter, 6);
     }
 
     padDigits(number, digits) {

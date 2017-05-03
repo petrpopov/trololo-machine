@@ -5,7 +5,7 @@ var Storage = require('node-storage');
 var store = new Storage('./tstorage.json');
 
 const tstore = {
-    saveBadum(chipId, counter, ip) {
+    saveBadum(chipId, chipName, counter, ip) {
         console.log('Saving badum ' + counter + ' counter for chipId ' + chipId);
 
         let obj = store.get(chipId);
@@ -25,6 +25,7 @@ const tstore = {
         }
 
         obj['chipId'] = chipId;
+        obj['chipName'] = chipName;
         obj['badumCounter'] = counter;
         obj['ip'] = ip;
         obj['updateDate'] = new Date();
@@ -32,7 +33,7 @@ const tstore = {
         store.put(chipId, obj);
     },
 
-    saveFail(chipId, counter, ip) {
+    saveFail(chipId, chipName, counter, ip) {
         console.log('Saving fail ' + counter + ' counter for chipId ' + chipId);
 
         let obj = store.get(chipId);
@@ -52,6 +53,7 @@ const tstore = {
         }
 
         obj['chipId'] = chipId;
+        obj['chipName'] = chipName;
         obj['failCounter'] = counter;
         obj['ip'] = ip;
         obj['updateDate'] = new Date();
