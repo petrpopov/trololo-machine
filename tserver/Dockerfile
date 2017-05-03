@@ -14,8 +14,9 @@ COPY . /usr/src/app
 
 # Build and optimize react app
 RUN npm run build
+RUN rm /usr/src/app/tstorage.json
 
 EXPOSE 3000
 
 # defined in package.json
-CMD [ "npm", "run", "start:server" ]
+CMD [ "node", "server" ]
